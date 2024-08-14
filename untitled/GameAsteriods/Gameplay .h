@@ -28,8 +28,6 @@ class Asteroid {
 private:
 
 //        f32 angle;
-
-
 public:
     f32 x;
     f32 y;
@@ -94,6 +92,7 @@ public:
     void update(float dt);
     virtual void draw(Input* input, float dt, Player& one);
 
+    void powerMeUp();
 };
 
 class PowerUps {

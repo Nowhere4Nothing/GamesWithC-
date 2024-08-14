@@ -9,8 +9,8 @@
 #include "ButtonsAsteriods.h"
 #include "Gameplay .h"
 
-f32 player_1_p_x, player_1_p_y, player_1_Dp_x, player_1_dp_y, playerAngle, centerX, centerY, asAngle;
-//player_1_p_x = 630.0f, player_1_p_y = 330.0f,
+f32 player_1_Dp_x, player_1_dp_y, playerAngle, centerX, centerY, asAngle;
+f32 player_1_p_y = 630.0f, player_1_p_x = 330.0f;
 f32 arenaHalfSizex = 95.0f, arenaHalfSizeY = 45.0f;
 
 
@@ -28,16 +28,17 @@ std::vector<Asteroid> newAst;
 GameMode currentGameMode;
 
 Asteroid astOne(astX, astY, astDpX, astDpY, asAngle, astSize);
-Player playerOne(player_1_p_x = 630.0f, player_1_p_y = 330.0f, playerAngle, player_1_Dp_x, player_1_dp_y,
+Player playerOne(player_1_p_x, player_1_p_y, playerAngle, player_1_Dp_x, player_1_dp_y,
                  10, centerX, centerY);
 PowerUps powerBox(powerX, powerY, powerDx, powerDy, powerCol, powerSize, powerType);
 std::random_device rd;
 std::mt19937 gen(rd());
 
-bool astAlive = true;
+bool death = false;
+
+void resetTheGame();
 
 void playGame(Input *input, float dt) {
-
     ClearBackground(BLACK);
 
     static float asteroidSpawnTimer = 0.0f;
@@ -53,9 +54,10 @@ void playGame(Input *input, float dt) {
         players.push_back(playerOne);
     }
 
-//    astOne.update(dt);
-//    astOne.draw(astOne);
-//
+    if (death) {
+        resetTheGame();
+    }
+
     if (vecAsteroid.empty()) {
         vecAsteroid.push_back(astOne);
     }
@@ -136,8 +138,6 @@ void playGame(Input *input, float dt) {
 
                 b.x = -100;
 
-
-
                 if ( ast.size > 10) {
 
                     std::random_device rd;
@@ -153,12 +153,11 @@ void playGame(Input *input, float dt) {
 
                     Asteroid bb (ast.x, ast.y, 10.0f, 50.0f, 0, ast.size / 2);
                     newAst.emplace_back(bb);
-
                 }
 
                 ast.x = -100;
             }
-
+            // this is getting the bullets and the asteroids collision detection
         }
 
         for (Asteroid &hhTwo: vecAsteroid) {
@@ -169,7 +168,7 @@ void playGame(Input *input, float dt) {
                 hhTwo.dy = -hhTwo.dy;
             }
         }
-
+        // this is for the asteroids bouncing off each other
     }
 
     for ( Asteroid& newAstA :  newAst) {
@@ -209,16 +208,38 @@ void playGame(Input *input, float dt) {
 ////    }
 }
 
+void resetTheGame() {
+//vecAsteroid.clear();
+//bulletsVec.clear();
 
+
+std::cout << "Death" << std::endl;
+players.clear();
+
+    death = false;
+}
 
 void Player::update(f32 dt) {
     x += dx * dt;
     y += dy * dt;
 
-//    std::cout << "Player Position: (" << x << ", " << y << ")\n";
+    std::cout << "Player Position: (" << x << ", " << y << ")\n";
 
     wrapCord(x, y, x, y);
 
+    for (auto &a : vecAsteroid) {
+        if (collision(a.x, a.y, a.size, x, y,1)) {
+        death = true;
+        }
+        // this is so the player resets when dead
+    }
+
+    for (auto &p : power) {
+        if (collision(p.x, p.y, p.size, x, y,1)) {
+            powerMeUp();
+        }
+        // this is to power up the player if hit
+    }
 }
 
 void Asteroid::update(f32 dt) {
@@ -250,11 +271,7 @@ void Asteroid::draw(Asteroid &a) {
             PIXEL_SOLID,
             WHITE
     );
-
-
 }
-
-
 
 void Player::draw(Input *input, f32 dt, Player &one) {
     one.vecModelShip =
@@ -372,6 +389,10 @@ void Player::draw(Input *input, f32 dt, Player &one) {
     }
 }
 
+void Player::powerMeUp() {
+
+}
+
 void PowerUps::update(f32 dt) {
     x += dx * dt;
     y += dy * dt;
@@ -432,6 +453,8 @@ bool collision(f32 cx, f32 cy, f32 radius, f32 x, f32 y, f32 radius2){
 //    float distance = std::sqrt(dx * dx + dy * dy);
 //    return distance < (radius + radius2);
 }
+
+
 
 //anything lower is a working progress
 
