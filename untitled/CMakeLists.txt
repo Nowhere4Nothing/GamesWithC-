@@ -21,3 +21,4 @@ add_executable(Pointer HackkerRank/Pointer.cpp)
 add_executable(Array HackkerRank/Array.cpp
         HackkerRank/FoorLoop.cpp)
 add_executable(ForLoop HackkerRank/FoorLoop.cpp)
+add_executable(if HackkerRank/ifStatement.cpp)
