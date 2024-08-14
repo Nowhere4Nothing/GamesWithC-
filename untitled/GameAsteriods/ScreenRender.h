@@ -5,6 +5,7 @@
 #ifndef UNTITLED_SCREENRENDER_H
 #define UNTITLED_SCREENRENDER_H
 
+#include <vector>
 typedef unsigned char u8;
 typedef char s8;
 typedef unsigned short u16;
@@ -14,12 +15,14 @@ typedef int s32;
 typedef float f32;
 typedef unsigned long long u64;
 typedef long long s64;
+typedef std::pair<float, float> Point;
 
 template <typename T>
 inline T clamp(T min, T val, T max);
 
 enum Colour {
     BLACK       = 0x000000,
+    FG_WHITE		= 0x000F,
     WHITE       = 0xFFFFFF,
     RED         = 0xFF0000,
     GREEN       = 0x00FF00,
@@ -60,16 +63,27 @@ enum Colour {
     LIGHT_TURQUOISE  = 0xAFEEEE
 };
 
-
+enum PIXEL_TYPE
+{
+    PIXEL_SOLID = 0x2588,
+    PIXEL_THREEQUARTERS = 0x2593,
+    PIXEL_HALF = 0x2592,
+    PIXEL_QUARTER = 0x2591,
+};
 
 //
+
 
 void draw_rect_in_pixel(int, int, int, int, unsigned int);
 void drawRect(float x, float y, float halfSizeX, float halfSizeY, u32 i);
 void  drawNumber(int, float, float, float, u32);
-void drawText (const char *text, float, float, float, u32);
+void drawText (const char *text, float, float, float, Colour);
 void drawArenaBorder(float, float, u32 );
-void drawLine(float, float, float, float u32);
-
-
+void drawLine(int x1, int y1, int x2, int y2, short c, Colour col);
+void ClearBackground(u32 color);
+void Draw(int x, int y, short c, Colour col);
+//void Clamping(int& x1, int& y1, short c, Colour col);
+void drawSquare(int x, int y, int size, short c, Colour col, bool, const s8* text);
+std::vector<Point> drawWireFrame(const std::vector<Point> &vecModelCoor, f32 &x, f32 &y, f32 &an, f32, s16, Colour);
+void fillSquare(s32, s32, s32, Colour);
 #endif //UNTITLED_SCREENRENDER_H

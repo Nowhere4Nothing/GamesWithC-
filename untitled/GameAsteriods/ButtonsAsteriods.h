@@ -18,6 +18,7 @@ enum {
 
     BUTTON_ENTER,
     BUTTON_ESC,
+    BUTTON_SPACE,
     BUTTON_COUNT,
 };
 

@@ -10,7 +10,7 @@
 #pragma comment(lib, "gdi32.lib")
 
 #define global_variable static
-global_variable float renderScale = 0.01f;
+extern float renderScale;
 
 struct RenderState {
     void * bufferMemory;
@@ -20,8 +20,11 @@ struct RenderState {
 };
 // using a struct to load the game better
 
-
-
 extern RenderState renderState;
+
+
+
+
+
 
 #endif //UNTITLED_ASTERIODGAMESCREEN_H

@@ -5,14 +5,14 @@
 #include <iostream>
 
 #include "AsteriodGameScreen.h"
-//#include "ButtonsAsteriods.h"
+
 #include "Gameplay .h"
 
 global_variable bool running = true;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-
+float renderScale = 0.01f;
 RenderState renderState;
 
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
@@ -75,9 +75,10 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
                     bool isDown = ((message.lParam & (1 << 31)) == 0);
 
 #define process_button(b, vk) \
-case vk: {\
+case vk: {                    \
+                              \
 input.buttons[b].change = isDown != input.buttons[b].isDown;\
-input.buttons[b].isDown = isDown;\
+input.buttons[b].isDown = isDown;                           \
 } break; // this is a macro to condense the code so there will not be as many if statements
 
                     switch (vkCode) {
@@ -87,6 +88,7 @@ input.buttons[b].isDown = isDown;\
                             process_button(BUTTON_RIGHT, VK_RIGHT)
                             process_button(BUTTON_ENTER, VK_RETURN)
                             process_button(BUTTON_ESC, VK_ESCAPE)
+                            process_button(BUTTON_SPACE, VK_SPACE)
                         }
                         default: {
                             std::cerr << "Process buttons is broken" << std::endl;
@@ -103,7 +105,6 @@ input.buttons[b].isDown = isDown;\
 
         // simulate
         playGame (&input, deltaTime);
-
 
         //render
         StretchDIBits(hdc, 0,0, renderState.bufferWidth, renderState.bufferHeight, 0 , 0,
